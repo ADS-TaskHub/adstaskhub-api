@@ -1,43 +1,25 @@
 ﻿using adstaskhub_api.Models;
-using FluentNHibernate.Mapping;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace adstaskhub_api.Data.Mappings
 {
-    public class UserMapping : ClassMap<User>
+    public class UserMapping : IEntityTypeConfiguration<User>
     {
-        public UserMapping()
+        public void Configure(EntityTypeBuilder<User> builder)
         {
-            Table("users");
+            builder.ToTable("users");
 
-            Id(x => x.UserId)
-                .Column("user_id");
-
-            Map(x => x.Name)
-                .Column("username");
-
-            Map(x => x.Email)
-                .Column("email");
-
-            Map(x => x.Password)
-                .Column("password");
-
-            Map(x => x.Phone)
-                .Column("phone");
-
-            References(x => x.Class)
-                .Column("class_id")
-                .ForeignKey()
-                .Not.LazyLoad();
-
-            References(x => x.Pronoun)
-                .Column("pronoun_id")
-                .ForeignKey()
-                .Not.LazyLoad();
-
-            References(x => x.Role)
-                .Column("role_id")
-                .ForeignKey()
-                .Not.LazyLoad();
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(255).HasColumnName("name");
+            builder.Property(x => x.Email).IsRequired().HasMaxLength(255).HasColumnName("email");
+            builder.Property(x => x.Password).IsRequired().HasMaxLength(1000).HasColumnName("password");
+            builder.Property(x => x.Phone).IsRequired().HasMaxLength(15).HasColumnName("phone");
+            builder.Property(x => x.ClassId).HasColumnName("class_id");
+            builder.HasOne(x => x.Class);
+            builder.Property(x => x.Pronoun).IsRequired().HasColumnName("pronoun");
+            builder.Property(x => x.RoleId).IsRequired().HasColumnName("role_id");
+            builder.HasOne(x => x.Role);
         }
     }
 }

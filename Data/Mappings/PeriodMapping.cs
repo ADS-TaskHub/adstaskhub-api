@@ -1,19 +1,17 @@
 ﻿using adstaskhub_api.Models;
-using FluentNHibernate.Mapping;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace adstaskhub_api.Data.Mappings
 {
-    public class PeriodMapping : ClassMap<Period>
+    public class PeriodMapping : IEntityTypeConfiguration<Period>
     {
-        public PeriodMapping()
+        public void Configure(EntityTypeBuilder<Period> builder)
         {
-            Table("periods");
+           builder.ToTable("periods");
 
-            Id(x => x.PeriodId)
-                .Column("period_id");
-
-            Map(x => x.Number)
-                .Column("period_number");
+           builder.HasKey(x => x.Id);
+           builder.Property(x => x.Number).IsRequired().HasColumnName("period_number");
         }
     }
 }

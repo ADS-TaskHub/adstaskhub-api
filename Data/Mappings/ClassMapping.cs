@@ -1,24 +1,19 @@
 ﻿using adstaskhub_api.Models;
-using FluentNHibernate.Mapping;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace adstaskhub_api.Data.Mappings
 {
-    public class ClassMapping : ClassMap<Class>
+    public class ClassMapping : IEntityTypeConfiguration<Class>
     {
-        public ClassMapping()
+        public void Configure(EntityTypeBuilder<Class> builder)
         {
-            Table("classes");
+            builder.ToTable("classes");
 
-            Id(x => x.ClassId)
-                .Column("class_id");
-
-            Map(x => x.ClassNumber)
-                .Column("class_number");
-
-            References(x => x.Period)
-                .Column("period_id")
-                .ForeignKey()
-                .Not.LazyLoad();
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.ClassNumber).IsRequired().HasColumnName("class_number");
+            builder.Property(x => x.PeriodId).IsRequired().HasColumnName("period_id");
+            builder.HasOne(x => x.Period);
         }
     }
 }

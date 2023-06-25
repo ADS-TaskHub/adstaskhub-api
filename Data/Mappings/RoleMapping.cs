@@ -1,19 +1,17 @@
 ﻿using adstaskhub_api.Models;
-using FluentNHibernate.Mapping;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace adstaskhub_api.Data.Mappings
 {
-    public class RoleMapping : ClassMap<Role>
+    public class RoleMapping : IEntityTypeConfiguration<Role>
     {
-        public RoleMapping()
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
-            Table("roles");
+            builder.ToTable("roles");
 
-            Id(x => x.RoleId)
-                .Column("role_id");
-
-            Map(x => x.Name)
-                .Column("role_name");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(255).HasColumnName("role_name");
         }
     }
 }
