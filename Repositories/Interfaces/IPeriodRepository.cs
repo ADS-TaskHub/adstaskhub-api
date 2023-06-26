@@ -8,6 +8,6 @@ namespace adstaskhub_api.Repositories.Interfaces
         Task<List<Period>> GetAllPeriods();
         Task<Period> CreatePeriod(Period period);
         Task<Period> UpdatePeriod(Period period, long id);
-        Task<bool> DeletePeriod(Period period, long id);
+        Task<bool> DeletePeriod(long id);
     }
 }

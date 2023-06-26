@@ -19,7 +19,7 @@ namespace adstaskhub_api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetAllUsers()
         {
-            IList<User> users = await _userRepository.GetAllUsers();
+            List<User> users = await _userRepository.GetAllUsers();
             return Ok(users);
         }
 

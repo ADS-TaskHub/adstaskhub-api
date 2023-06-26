@@ -8,6 +8,6 @@ namespace adstaskhub_api.Repositories.Interfaces
         Task<List<Class>> GetAllClasses();
         Task<Class> CreateClass(Class @class);
         Task<Class> UpdateClass(Class @class, long id);
-        Task<bool> DeleteClass(Class @class, long id);
+        Task<bool> DeleteClass(long id);
     }
 }

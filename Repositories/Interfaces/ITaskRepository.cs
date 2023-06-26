@@ -8,6 +8,6 @@ namespace adstaskhub_api.Repositories.Interfaces
         Task<List<Models.Task>> GetAllTasks();
         Task<Models.Task> CreateTask(Models.Task task);
         Task<Models.Task> UpdateTask(Models.Task task, long id);
-        Task<bool> DeleteTask(Models.Task task, long id);
+        Task<bool> DeleteTask(long id);
     }
 }

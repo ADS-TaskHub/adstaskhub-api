@@ -50,7 +50,7 @@ namespace adstaskhub_api.Repositories
             return @classById;
         }
 
-        public async Task<bool> DeleteClass(Class @class, long id)
+        public async Task<bool> DeleteClass(long id)
         {
             Class classById = await GetClassById(id);
 

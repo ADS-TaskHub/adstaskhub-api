@@ -56,7 +56,7 @@ namespace adstaskhub_api.Repositories
             return taskById;
         }
 
-        public async Task<bool> DeleteTask(Models.Task task, long id)
+        public async Task<bool> DeleteTask(long id)
         {
             Models.Task taskById = await GetTaskById(id);
 

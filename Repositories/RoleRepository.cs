@@ -49,7 +49,7 @@ namespace adstaskhub_api.Repositories
             return roleById;
         }
 
-        public async Task<bool> DeleteRole(Role role, long id)
+        public async Task<bool> DeleteRole(long id)
         {
             Role roleById = await GetRoleById(id);
 

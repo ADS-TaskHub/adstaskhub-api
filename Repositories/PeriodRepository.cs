@@ -49,7 +49,7 @@ namespace adstaskhub_api.Repositories
             return periodById;
         }
 
-        public async Task<bool> DeletePeriod(Period period, long id)
+        public async Task<bool> DeletePeriod(long id)
         {
             Period periodById = await GetPeriodById(id);
 
