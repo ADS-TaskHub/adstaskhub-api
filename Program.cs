@@ -17,6 +17,8 @@ builder.Services.AddEntityFrameworkNpgsql()
         options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
 
+var hashKey = builder.Configuration.GetValue<string>("TokenSettings:HashKey");
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
 builder.Services.AddScoped<IPeriodRepository, PeriodRepository>();
