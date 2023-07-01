@@ -1,5 +1,6 @@
-﻿using adstaskhub_api.Models;
-using adstaskhub_api.Repositories.Interfaces;
+﻿using adstaskhub_api.Application.DTOs;
+using adstaskhub_api.Domain.Models;
+using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,38 +18,38 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAllUsers()
+        public async Task<ActionResult<List<UserDTO>>> GetAllUsersDTO()
         {
-            List<User> users = await _userRepository.GetAllUsers();
+            List<UserDTO> users = await _userRepository.GetAllUsersDTO();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<User>>> GetUserById(long id)
+        public async Task<ActionResult<List<UserDTO>>> GetUserDTOById(long id)
         {
-            User user = await _userRepository.GetUserById(id);
+            UserDTO user = await _userRepository.GetUserDTOById(id);
             return Ok(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
+        public async Task<ActionResult<UserDTO>> CreateUser([FromBody] User user)
         {
-            User userResult = await _userRepository.CreateUser(user);
+            UserDTO userResult = await _userRepository.CreateUser(user);
 
             return Ok(userResult);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<User>> UpdateUser([FromBody] User user, long id)
+        public async Task<ActionResult<UserDTO>> UpdateUser([FromBody] User user, long id)
         {
             user.Id = id;
-            User userResult = await _userRepository.UpdateUser(user, id);
+            UserDTO userResult = await _userRepository.UpdateUser(user, id);
 
             return Ok(userResult);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(long id)
+        public async Task<ActionResult<Boolean>> DeleteUser(long id)
         {
             bool deleted = await _userRepository.DeleteUser(id);
             return Ok(deleted);
