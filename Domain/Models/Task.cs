@@ -1,6 +1,4 @@
-﻿using adstaskhub_api.Domain.Enums;
-
-namespace adstaskhub_api.Domain.Models
+﻿namespace adstaskhub_api.Domain.Models
 {
     public class Task
     {
@@ -9,11 +7,6 @@ namespace adstaskhub_api.Domain.Models
         public virtual string? Description { get; set; }
         public virtual DateTime? StartDate { get; set; }
         public virtual DateTime? DueDate { get; set; }
-        public virtual StatusTask Status { get; set; }
-        public virtual long ClassId { get; set; }
-        public virtual Class Class { get; set; }
-        public virtual long UserId { get; set; }
-        public virtual User User { get; set; }
         public virtual string? TaskLink { get; set; }
     }
 }

@@ -19,25 +19,25 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<Role> GetRoleById(long id)
         {
-            return await _dbContext.roles.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<RoleDTO> GetRoleDTOById(long id)
         {
-            Role role =  await _dbContext.roles.FirstOrDefaultAsync(x => x.Id == id);
+            Role role =  await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
             return _roleMapper.MapToDTO(role);
         }
 
         public async Task<List<RoleDTO>> GetAllRolesDTO()
         {
-            List<Role> roles = await _dbContext.roles.ToListAsync();
+            List<Role> roles = await _dbContext.Roles.ToListAsync();
 
             return roles.Select(role => _roleMapper.MapToDTO(role)).ToList();
         }
 
         public async Task<RoleDTO> CreateRole(Role role)
         {
-            await _dbContext.roles.AddAsync(role);
+            await _dbContext.Roles.AddAsync(role);
             await _dbContext.SaveChangesAsync();
 
             return _roleMapper.MapToDTO(role);
@@ -49,7 +49,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             roleById.Id = role.Id;
             roleById.Name = role.Name;
 
-            _dbContext.roles.Update(roleById);
+            _dbContext.Roles.Update(roleById);
             await _dbContext.SaveChangesAsync();
             return _roleMapper.MapToDTO(roleById);
         }
@@ -57,7 +57,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
         public async Task<bool> DeleteRole(long id)
         {
             Role roleById = await GetRoleById(id) ?? throw new Exception($"Role for ID: {id} not found");
-            _dbContext.roles.Remove(roleById);
+            _dbContext.Roles.Remove(roleById);
             await _dbContext.SaveChangesAsync();
             return true;
         }

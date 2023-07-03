@@ -19,8 +19,6 @@ namespace adstaskhub_api.Infrastructure.Mappers
                 Description = task.Description,
                 StartDate = task.StartDate,
                 DueDate = task.DueDate,
-                Status = task.Status,
-                User = _userMapper.MapToDTO(task.User),
                 TaskLink = task.TaskLink
             };
             return taskDTO;
@@ -34,8 +32,6 @@ namespace adstaskhub_api.Infrastructure.Mappers
                 Description = taskDto.Description,
                 StartDate = taskDto.StartDate,
                 DueDate = taskDto.DueDate,
-                Status = taskDto.Status,
-                User = _userMapper.MapToEntity(taskDto.User),
                 TaskLink = taskDto.TaskLink
             };
 

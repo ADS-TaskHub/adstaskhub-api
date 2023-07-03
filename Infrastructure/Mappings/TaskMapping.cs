@@ -14,22 +14,7 @@ namespace adstaskhub_api.Infrastructure.Mappings
             builder.Property(x => x.Description).HasMaxLength(1000).HasColumnName("description");
             builder.Property(x => x.StartDate).HasColumnName("start_date");
             builder.Property(x => x.DueDate).HasColumnName("due_date");
-            builder.Property(x => x.Status).IsRequired().HasColumnName("status");
-            builder.Property(x => x.ClassId).IsRequired().HasColumnName("class_id");
-            builder.Property(x => x.UserId).IsRequired().HasColumnName("user_id");
             builder.Property(x => x.TaskLink).HasMaxLength(1000).HasColumnName("task_link");
-
-            builder.HasOne(x => x.Class)
-                .WithMany()
-                .HasForeignKey(x => x.ClassId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(x => x.User)
-                .WithMany()
-                .HasForeignKey(x => x.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace adstaskhub_api.Controllers
@@ -48,7 +47,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Boolean>> DeleteTask(long id)
+        public async Task<ActionResult<bool>> DeleteTask(long id)
         {
             bool deleted = await _taskRepository.DeleteTask(id);
             return Ok(deleted);

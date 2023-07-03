@@ -19,19 +19,13 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<Domain.Models.Task> GetTaskById(long id)
         {
-            return await _dbContext.tasks
-                .Include(x => x.Class)
-                    .ThenInclude(x => x.Period)
-                .Include(x => x.User)
+            return await _dbContext.Tasks
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<TaskDTO> GetTaskDTOById(long id)
         {
-            Domain.Models.Task task = await _dbContext.tasks
-                .Include(x => x.Class)
-                    .ThenInclude(x => x.Period)
-                .Include(x => x.User)
+            Domain.Models.Task task = await _dbContext.Tasks
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return _taskMapper.MapToDTO(task);
@@ -39,17 +33,14 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<List<TaskDTO>> GetAllTasksDTO()
         {
-            List<Domain.Models.Task> tasks = await _dbContext.tasks
-                .Include(x => x.Class)
-            .Include(x => x.User)
-            .ToListAsync();
+            List<Domain.Models.Task> tasks = await _dbContext.Tasks.ToListAsync();
 
             return tasks.Select(task => _taskMapper.MapToDTO(task)).ToList();
         }
 
         public async Task<TaskDTO> CreateTask(Domain.Models.Task task)
         {
-            await _dbContext.tasks.AddAsync(task);
+            await _dbContext.Tasks.AddAsync(task);
             await _dbContext.SaveChangesAsync();
 
             return _taskMapper.MapToDTO(task);
@@ -63,12 +54,9 @@ namespace adstaskhub_api.Infrastructure.Repositories
             taskById.Description = task.Description;
             taskById.StartDate = task.StartDate;
             taskById.DueDate = task.DueDate;
-            taskById.Status = task.Status;
-            taskById.ClassId = task.ClassId;
-            taskById.UserId = task.UserId;
             taskById.TaskLink = task.TaskLink;
 
-            _dbContext.tasks.Update(taskById);
+            _dbContext.Tasks.Update(taskById);
             await _dbContext.SaveChangesAsync();
             return _taskMapper.MapToDTO(taskById);
         }
@@ -76,7 +64,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
         public async Task<bool> DeleteTask(long id)
         {
             Domain.Models.Task taskById = await GetTaskById(id) ?? throw new Exception($"Task for ID: {id} not found");
-            _dbContext.tasks.Remove(taskById);
+            _dbContext.Tasks.Remove(taskById);
             await _dbContext.SaveChangesAsync();
             return true;
         }

@@ -12,9 +12,9 @@ namespace adstaskhub_api.Infrastructure.Mappers
             _classMapper = classMapper;
         }
 
-        public UserDTO MapToDTO(User user)
+        public UserDTOBase MapToDTO(User user)
         {
-            UserDTO userDto = new()
+            UserDTOBase userDto = new()
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -25,7 +25,7 @@ namespace adstaskhub_api.Infrastructure.Mappers
             return userDto;
         }
 
-        public User MapToEntity(UserDTO userDto)
+        public User MapToEntity(UserDTOBase userDto)
         {
             User user = new()
             {

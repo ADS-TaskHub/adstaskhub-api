@@ -9,7 +9,6 @@ namespace adstaskhub_api.Application.DTOs
         public virtual DateTime? StartDate { get; set; }
         public virtual DateTime? DueDate { get; set; }
         public virtual StatusTask Status { get; set; }
-        public virtual UserDTO User { get; set; }
         public virtual string? TaskLink { get; set; }
     }
 }

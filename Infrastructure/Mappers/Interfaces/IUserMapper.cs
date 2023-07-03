@@ -5,7 +5,7 @@ namespace adstaskhub_api.Infrastructure.Mappers.Interfaces
 {
     public interface IUserMapper
     {
-        UserDTO MapToDTO(User user);
-        User MapToEntity(UserDTO userDto);
+        UserDTOBase MapToDTO(User user);
+        User MapToEntity(UserDTOBase userDto);
     }
 }

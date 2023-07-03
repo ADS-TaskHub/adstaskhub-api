@@ -19,15 +19,15 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<User> GetUserById(long id)
         {
-            return await _dbContext.users
+            return await _dbContext.Users
                 .Include(x => x.Role)
                 .Include(x => x.Class)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<UserDTO> GetUserDTOById(long id)
+        public async Task<UserDTOBase> GetUserDTOById(long id)
         {
-            User user = await _dbContext.users
+            User user = await _dbContext.Users
                 .Include(x => x.Role)
                 .Include(x => x.Class)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -37,16 +37,38 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<User> GetUserByEmail(string email)
         {
-            return await _dbContext.users
+            return await _dbContext.Users
                 .Include(x => x.Role)
                 .Include(x => x.Class)
                     .ThenInclude(x => x.Period)
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task<List<UserDTO>> GetAllUsersDTO()
+        public async Task<List<UserDTOBase>> GetUsersDTOByClass(int classNumber)
         {
-            List<User> users = await _dbContext.users
+            List<User> users = await _dbContext.Users
+                .Include(x => x.Role)
+                .Include(x => x.Class)
+                    .ThenInclude(x => x.Period)
+                .Where(x => x.Class.ClassNumber == classNumber)
+                .ToListAsync();
+
+            return users.Select(user => _userMapper.MapToDTO(user)).ToList();
+        }
+
+        public async Task<List<User>> GetUsersByClass(int classNumber)
+        {
+            return await _dbContext.Users
+                .Include(x => x.Role)
+                .Include(x => x.Class)
+                    .ThenInclude(x => x.Period)
+                .Where(x => x.Class.ClassNumber == classNumber)
+                .ToListAsync();
+        }
+
+        public async Task<List<UserDTOBase>> GetAllUsersDTO()
+        {
+            List<User> users = await _dbContext.Users
                  .Include(x => x.Role)
                  .Include(x => x.Class)
                      .ThenInclude(x => x.Period)
@@ -55,19 +77,54 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return users.Select(user => _userMapper.MapToDTO(user)).ToList();
         }
 
-        public async Task<UserDTO> CreateUser(User user)
+        public async Task<List<UserDTOBase>> GetUsersDTOByClassWithPagination(int classNumber, int pageNumber, int pageSize)
         {
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            var users = await _dbContext.Users
+                .Include(x => x.Role)
+                .Include(x => x.Class)
+                    .ThenInclude(x => x.Period)
+                .Where(x => x.Class.ClassNumber == classNumber)
+                .ToListAsync();
 
-            user.Password = hashedPassword;
+            var pagedUsers = users
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-            await _dbContext.users.AddAsync(user);
+            return pagedUsers.Select(user => _userMapper.MapToDTO(user)).ToList();
+        }
+
+        public async Task<List<UserDTOBase>> GetAllUsersDTOWithPagination(int pageNumber, int pageSize)
+        {
+            var users = await _dbContext.Users
+                 .Include(x => x.Role)
+                 .Include(x => x.Class)
+                     .ThenInclude(x => x.Period)
+                 .ToListAsync();
+
+            var pagedUsers = users
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return pagedUsers.Select(user => _userMapper.MapToDTO(user)).ToList();
+        }
+
+
+        public async Task<UserDTOBase> CreateUser(UserCreateDTO userCreate)
+        {
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userCreate.Password);
+            userCreate.Password = hashedPassword;
+
+            User user = _userMapper.MapToEntity(userCreate);
+
+            await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
 
             return _userMapper.MapToDTO(user);
         }
 
-        public async Task<UserDTO> UpdateUser(User user, long id)
+        public async Task<UserDTOBase> UpdateUser(User user, long id)
         {
             User userById = await GetUserById(id) ?? throw new Exception($"User for ID: {id} not found");
             userById.Name = user.Name;
@@ -83,7 +140,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
                 userById.Password = hashedPassword;
             }
 
-            _dbContext.users.Update(userById);
+            _dbContext.Users.Update(userById);
             await _dbContext.SaveChangesAsync();
 
             return _userMapper.MapToDTO(userById);
@@ -92,7 +149,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
         public async Task<bool> DeleteUser(long id)
         {
             User userById = await GetUserById(id) ?? throw new Exception($"User for ID: {id} not found");
-            _dbContext.users.Remove(userById);
+            _dbContext.Users.Remove(userById);
             await _dbContext.SaveChangesAsync();
             return true;
         }

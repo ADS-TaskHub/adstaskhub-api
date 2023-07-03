@@ -77,6 +77,7 @@ builder.Services.AddScoped<IClassRepository, ClassRepository>();
 builder.Services.AddScoped<IPeriodRepository, PeriodRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<ITaskAssignmentRepository, TaskAssignmentRepository>();
 
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<IClassMapper, ClassMapper>();

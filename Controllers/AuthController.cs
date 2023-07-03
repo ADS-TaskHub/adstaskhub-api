@@ -40,7 +40,7 @@ namespace adstaskhub_api.Controllers
                 return Unauthorized(new { message = "Email ou senha inválidos" });
             }
             var token = _tokenService.GenerateToken(userAuth);
-            UserDTO userDto = _userMapper.MapToDTO(userAuth);
+            UserDTOBase userDto = _userMapper.MapToDTO(userAuth);
 
             return new
             {

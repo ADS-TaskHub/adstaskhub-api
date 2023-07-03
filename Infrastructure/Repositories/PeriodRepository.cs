@@ -20,25 +20,25 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<Period> GetPeriodById(long id)
         {
-            return await _dbContext.periods.FirstOrDefaultAsync(x => x.Id == id);
+            return await _dbContext.Periods.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<PeriodDTO> GetPeriodDTOById(long id)
         {
-            Period period = await _dbContext.periods.FirstOrDefaultAsync(x => x.Id == id);
+            Period period = await _dbContext.Periods.FirstOrDefaultAsync(x => x.Id == id);
             return _periodMapper.MapToDTO(period);
         }
 
         public async Task<List<PeriodDTO>> GetAllPeriodsDTO()
         {
-            List<Period> periods = await _dbContext.periods.ToListAsync();
+            List<Period> periods = await _dbContext.Periods.ToListAsync();
 
             return periods.Select(period => _periodMapper.MapToDTO(period)).ToList();
         }
 
         public async Task<PeriodDTO> CreatePeriod(Period period)
         {
-            await _dbContext.periods.AddAsync(period);
+            await _dbContext.Periods.AddAsync(period);
             await _dbContext.SaveChangesAsync();
 
             return _periodMapper.MapToDTO(period);
@@ -50,7 +50,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             periodById.Id = period.Id;
             periodById.Number = period.Number;
 
-            _dbContext.periods.Update(periodById);
+            _dbContext.Periods.Update(periodById);
             await _dbContext.SaveChangesAsync();
             return _periodMapper.MapToDTO(periodById);
         }
@@ -58,7 +58,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
         public async Task<bool> DeletePeriod(long id)
         {
             Period periodById = await GetPeriodById(id) ?? throw new Exception($"Period for ID: {id} not found");
-            _dbContext.periods.Remove(periodById);
+            _dbContext.Periods.Remove(periodById);
             await _dbContext.SaveChangesAsync();
             return true;
         }

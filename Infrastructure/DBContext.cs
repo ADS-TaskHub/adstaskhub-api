@@ -10,11 +10,12 @@ namespace adstaskhub_api.Infrastructure
         {
         }
 
-        public DbSet<User> users { get; set; }
-        public DbSet<Domain.Models.Task> tasks { get; set; }
-        public DbSet<Class> classes { get; set; }
-        public DbSet<Role> roles { get; set; }
-        public DbSet<Period> periods { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Domain.Models.Task> Tasks { get; set; }
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Period> Periods { get; set; }
+        public DbSet<TaskAssignment> TasksAssignment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,6 +24,7 @@ namespace adstaskhub_api.Infrastructure
             modelBuilder.ApplyConfiguration(new ClassMapping());
             modelBuilder.ApplyConfiguration(new UserMapping());
             modelBuilder.ApplyConfiguration(new TaskMapping());
+            modelBuilder.ApplyConfiguration(new TaskAssignmentMapping());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -24,6 +24,8 @@ namespace adstaskhub_api.Application.Services
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Role, user.Role.Name),
+                    new Claim(ClaimTypes.Gender, user.Pronoun.ToString())
                 }
                 ),
                 Expires = DateTime.UtcNow.AddHours(8),

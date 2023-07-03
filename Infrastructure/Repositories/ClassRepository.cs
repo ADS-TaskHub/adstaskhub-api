@@ -21,14 +21,14 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<Class> GetClassById(long id)
         {
-            return await _dbContext.classes
+            return await _dbContext.Classes
                 .Include(x => x.Period)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<ClassDTO> GetClassDTOById(long id)
         {
-            Class @class = await _dbContext.classes
+            Class @class = await _dbContext.Classes
                 .Include(x => x.Period)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -37,7 +37,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<List<ClassDTO>> GetAllClassesDTO()
         {
-            List<Class> classes = await _dbContext.classes
+            List<Class> classes = await _dbContext.Classes
                 .Include(x => x.Period)
             .ToListAsync();
 
@@ -46,7 +46,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
 
         public async Task<ClassDTO> CreateClass(Class @class)
         {
-            await _dbContext.classes.AddAsync(@class);
+            await _dbContext.Classes.AddAsync(@class);
             await _dbContext.SaveChangesAsync();
 
             return _classMapper.MapToDTO(@class);
@@ -59,7 +59,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             classById.ClassNumber = @class.ClassNumber;
             classById.PeriodId = @class.PeriodId;
 
-            _dbContext.classes.Update(classById);
+            _dbContext.Classes.Update(classById);
             await _dbContext.SaveChangesAsync();
 
             return _classMapper.MapToDTO(classById);
@@ -68,7 +68,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
         public async Task<bool> DeleteClass(long id)
         {
             Class classById = await GetClassById(id) ?? throw new Exception($"Class for ID: {id} not found");
-            _dbContext.classes.Remove(classById);
+            _dbContext.Classes.Remove(classById);
             await _dbContext.SaveChangesAsync();
             return true;
         }

@@ -2,7 +2,7 @@
 
 namespace adstaskhub_api.Application.DTOs
 {
-    public class UserDTO
+    public class UserDTOBase
     {
         public virtual long Id { get; set; }
         public virtual string Name { get; set; }
