@@ -10,7 +10,8 @@ namespace adstaskhub_api.Infrastructure.Mappers
         {
             RoleDTO roleDto = new()
             {
-                Name = role.Name
+                Name = role.Name,
+                Description = role.Description,
             };
             return roleDto;
         }
@@ -20,6 +21,7 @@ namespace adstaskhub_api.Infrastructure.Mappers
             Role role = new()
             {
                 Name = roleDto.Name,
+                Description = roleDto.Description,
             };
             return role;
         }

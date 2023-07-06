@@ -49,6 +49,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             Period periodById = await GetPeriodById(id) ?? throw new Exception($"Period for ID: {id} not found");
             periodById.Id = period.Id;
             periodById.Number = period.Number;
+            periodById.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.Periods.Update(periodById);
             await _dbContext.SaveChangesAsync();
@@ -59,6 +60,15 @@ namespace adstaskhub_api.Infrastructure.Repositories
         {
             Period periodById = await GetPeriodById(id) ?? throw new Exception($"Period for ID: {id} not found");
             _dbContext.Periods.Remove(periodById);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> SoftDeletePeriod(long id)
+        {
+            Period periodById = await GetPeriodById(id) ?? throw new Exception($"Period for ID: {id} not found");
+
+            periodById.IsDeleted = true;
+
             await _dbContext.SaveChangesAsync();
             return true;
         }

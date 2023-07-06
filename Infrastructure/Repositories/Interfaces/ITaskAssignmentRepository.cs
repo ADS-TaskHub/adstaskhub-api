@@ -10,5 +10,6 @@ namespace adstaskhub_api.Infrastructure.Repositories.Interfaces
         Task<TaskAssignment> CreateTaskAssignment(TaskAssignment taskAssignment);
         Task<TaskAssignment> UpdateTaskAssignment(TaskAssignment taskAssignment, long id);
         Task<bool> DeleteTaskAssignment(long id);
+        Task<bool> SoftDeleteTaskAssignment(long id);
     }
 }

@@ -133,6 +133,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             userById.ClassId = user.ClassId;
             userById.Pronoun = user.Pronoun;
             userById.RoleId = user.RoleId;
+            userById.UpdatedAt = DateTime.UtcNow;
 
             if (!string.IsNullOrEmpty(user.Password))
             {
@@ -146,10 +147,36 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return _userMapper.MapToDTO(userById);
         }
 
+        public async Task<UserDTOBase> ChangeUserClass(long userId, int newClassNumber)
+        {
+            User user = await _dbContext.Users
+                .Include(x => x.Role)
+                .Include(x => x.Class)
+                    .ThenInclude(x => x.Period)
+                .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new Exception($"User for ID: {userId} not found");
+            Class newClass = await _dbContext.Classes.FirstOrDefaultAsync(x => x.ClassNumber == newClassNumber) ?? throw new Exception($"Class with number: {newClassNumber} not found");
+            user.ClassId = newClass.Id;
+
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            return _userMapper.MapToDTO(user);
+        }
+
         public async Task<bool> DeleteUser(long id)
         {
             User userById = await GetUserById(id) ?? throw new Exception($"User for ID: {id} not found");
             _dbContext.Users.Remove(userById);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> SoftDeleteUser(long id)
+        {
+            User userById = await GetUserById(id) ?? throw new Exception($"User for ID: {id} not found");
+
+            userById.IsDeleted = true;
+
             await _dbContext.SaveChangesAsync();
             return true;
         }

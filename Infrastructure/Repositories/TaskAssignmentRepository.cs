@@ -50,12 +50,10 @@ namespace adstaskhub_api.Infrastructure.Repositories
         {
             TaskAssignment taskAssignmentById = await GetTaskAssignmentById(id) ?? throw new Exception($"TaskAssignment for ID: {id} not found");
             taskAssignmentById.TaskId = taskAssignment.TaskId;
-            taskAssignmentById.Task = taskAssignment.Task;
             taskAssignmentById.Status = taskAssignment.Status;
             taskAssignmentById.ClassId = taskAssignment.ClassId;
-            taskAssignmentById.Class = taskAssignment.Class;
             taskAssignmentById.UserId = taskAssignment.UserId;
-            taskAssignmentById.User = taskAssignment.User;
+            taskAssignmentById.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.TasksAssignment.Update(taskAssignmentById);
             _dbContext.SaveChangesAsync();
@@ -69,5 +67,16 @@ namespace adstaskhub_api.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> SoftDeleteTaskAssignment(long id)
+        {
+            TaskAssignment taskAssignmentById = await GetTaskAssignmentById(id) ?? throw new Exception($"TaskAssignment for ID: {id} not found");
+
+            taskAssignmentById.IsDeleted = true;
+
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

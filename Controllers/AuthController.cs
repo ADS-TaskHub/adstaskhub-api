@@ -1,8 +1,8 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Application.Services;
-using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Mappers.Interfaces;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace adstaskhub_api.Controllers
@@ -25,19 +25,21 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<dynamic>> Login([FromBody] UserLogin user)
+        [Route("login")]
+        [AllowAnonymous]
+        public async Task<ActionResult<dynamic>> Authenticate([FromBody] UserLoginDTO user)
         {
             var userAuth = await _userRepository.GetUserByEmail(user.Email);
 
             if (userAuth == null)
             {
-                return Unauthorized(new { message = "Email ou senha inválidos" });
+                return Unauthorized(new { message = "Invalid email or password!" });
             }
 
             bool authenticated = await _authenticationService.VerifyPassword(user.Password, userAuth.Password);
             if (!authenticated)
             {
-                return Unauthorized(new { message = "Email ou senha inválidos" });
+                return Unauthorized(new { message = "Invalid email or password!" });
             }
             var token = _tokenService.GenerateToken(userAuth);
             UserDTOBase userDto = _userMapper.MapToDTO(userAuth);

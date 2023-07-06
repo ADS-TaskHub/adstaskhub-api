@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using adstaskhub_api.Domain.Models;
 
-namespace adstaskhub_api.Domain.Models
+namespace adstaskhub_api.Application.DTOs
 {
-    public class UserLogin : EntityBase
+    public class UserLoginDTO
     {
         [Required(ErrorMessage = "O campo 'email' é obrigatório.")]
         [EmailAddress(ErrorMessage = "O campo 'email' deve ser um endereço de email válido.")]

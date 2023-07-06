@@ -55,6 +55,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             taskById.StartDate = task.StartDate;
             taskById.DueDate = task.DueDate;
             taskById.TaskLink = task.TaskLink;
+            taskById.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.Tasks.Update(taskById);
             await _dbContext.SaveChangesAsync();
@@ -65,6 +66,15 @@ namespace adstaskhub_api.Infrastructure.Repositories
         {
             Domain.Models.Task taskById = await GetTaskById(id) ?? throw new Exception($"Task for ID: {id} not found");
             _dbContext.Tasks.Remove(taskById);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> SoftDeleteTask(long id)
+        {
+            Domain.Models.Task taskById = await GetTaskById(id) ?? throw new Exception($"Task for ID: {id} not found");
+
+            taskById.IsDeleted = true;
+
             await _dbContext.SaveChangesAsync();
             return true;
         }

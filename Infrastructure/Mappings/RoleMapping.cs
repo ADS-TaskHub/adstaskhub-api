@@ -11,6 +11,7 @@ namespace adstaskhub_api.Infrastructure.Mappings
             builder.ToTable("roles");
 
             builder.Property(x => x.Name).IsRequired().HasMaxLength(255).HasColumnName("role_name");
+            builder.Property(x => x.Description).HasMaxLength(255).HasColumnName("description");
 
             builder.Property(x => x.CreatedAt)
                .IsRequired()

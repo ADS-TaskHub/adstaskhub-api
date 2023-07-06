@@ -1,5 +1,4 @@
-﻿using adstaskhub_api.Application.DTOs;
-using adstaskhub_api.Domain.Models;
+﻿using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 
 namespace adstaskhub_api.Application.Services

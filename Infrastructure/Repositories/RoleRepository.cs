@@ -48,6 +48,8 @@ namespace adstaskhub_api.Infrastructure.Repositories
             Role roleById = await GetRoleById(id) ?? throw new Exception($"Role for ID: {id} not found");
             roleById.Id = role.Id;
             roleById.Name = role.Name;
+            roleById.Description = role.Description;
+            roleById.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.Roles.Update(roleById);
             await _dbContext.SaveChangesAsync();
@@ -58,6 +60,16 @@ namespace adstaskhub_api.Infrastructure.Repositories
         {
             Role roleById = await GetRoleById(id) ?? throw new Exception($"Role for ID: {id} not found");
             _dbContext.Roles.Remove(roleById);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> SoftDeleteRole(long id)
+        {
+            Role roleById = await GetRoleById(id) ?? throw new Exception($"Role for ID: {id} not found");
+
+            roleById.IsDeleted = true;
+
             await _dbContext.SaveChangesAsync();
             return true;
         }

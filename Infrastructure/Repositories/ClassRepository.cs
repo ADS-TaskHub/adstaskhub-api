@@ -58,6 +58,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             classById.Id = @class.Id;
             classById.ClassNumber = @class.ClassNumber;
             classById.PeriodId = @class.PeriodId;
+            classById.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.Classes.Update(classById);
             await _dbContext.SaveChangesAsync();
@@ -69,6 +70,15 @@ namespace adstaskhub_api.Infrastructure.Repositories
         {
             Class classById = await GetClassById(id) ?? throw new Exception($"Class for ID: {id} not found");
             _dbContext.Classes.Remove(classById);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> SoftDeleteClass(long id)
+        {
+            Class classById = await GetClassById(id) ?? throw new Exception($"Class for ID: {id} not found");
+
+            classById.IsDeleted = true;
+
             await _dbContext.SaveChangesAsync();
             return true;
         }
