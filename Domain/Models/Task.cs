@@ -1,6 +1,6 @@
 ﻿namespace adstaskhub_api.Domain.Models
 {
-    public class Task
+    public class Task : EntityBase
     {
         public virtual long Id { get; set; }
         public virtual string TaskName { get; set; }

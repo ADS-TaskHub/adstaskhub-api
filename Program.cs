@@ -67,9 +67,9 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-builder.Services.AddEntityFrameworkNpgsql()
+builder.Services.AddEntityFrameworkSqlServer()
     .AddDbContext<DBContext>(
-        options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();

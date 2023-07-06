@@ -1,6 +1,6 @@
 ﻿namespace adstaskhub_api.Domain.Models
 {
-    public class Class
+    public class Class : EntityBase
     {
         public virtual long Id { get; set; }
         public virtual int ClassNumber { get; set; }

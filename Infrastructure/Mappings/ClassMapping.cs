@@ -10,7 +10,6 @@ namespace adstaskhub_api.Infrastructure.Mappings
         {
             builder.ToTable("classes");
 
-            builder.HasKey(x => x.Id);
             builder.Property(x => x.ClassNumber).IsRequired().HasColumnName("class_number");
             builder.Property(x => x.PeriodId).IsRequired().HasColumnName("period_id");
             builder.HasOne(x => x.Period);
@@ -20,6 +19,20 @@ namespace adstaskhub_api.Infrastructure.Mappings
                 .HasForeignKey(x => x.PeriodId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(x => x.CreatedAt)
+               .IsRequired()
+               .HasDefaultValueSql("GETUTCDATE()")
+               .HasColumnName("created_at");
+
+            builder.Property(x => x.UpdatedAt)
+                .HasDefaultValueSql("GETUTCDATE()")
+                .HasColumnName("updated_at");
+
+            builder.Property(x => x.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
         }
     }
 }

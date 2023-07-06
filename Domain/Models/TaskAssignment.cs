@@ -2,7 +2,7 @@
 
 namespace adstaskhub_api.Domain.Models
 {
-    public class TaskAssignment
+    public class TaskAssignment : EntityBase
     {
         public virtual long Id { get; set; }
         public virtual long TaskId { get; set; }

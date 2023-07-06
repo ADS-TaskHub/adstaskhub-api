@@ -4,18 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace adstaskhub_api.Infrastructure.Mappings
 {
-    public class PeriodMapping : IEntityTypeConfiguration<Period>
+    public class EntityBaseMapping : IEntityTypeConfiguration<EntityBase>
     {
-        public void Configure(EntityTypeBuilder<Period> builder)
+        public void Configure(EntityTypeBuilder<EntityBase> builder)
         {
-            builder.ToTable("periods");
-
-            builder.Property(x => x.Number).IsRequired().HasColumnName("period_number");
+            builder.HasKey(e => e.Id);
 
             builder.Property(x => x.CreatedAt)
-               .IsRequired()
-               .HasDefaultValueSql("GETUTCDATE()")
-               .HasColumnName("created_at");
+                .IsRequired()
+                .HasDefaultValueSql("GETUTCDATE()")
+                .HasColumnName("created_at");
 
             builder.Property(x => x.UpdatedAt)
                 .HasDefaultValueSql("GETUTCDATE()")

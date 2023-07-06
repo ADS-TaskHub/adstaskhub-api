@@ -10,8 +10,21 @@ namespace adstaskhub_api.Infrastructure.Mappings
         {
             builder.ToTable("roles");
 
-            builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(255).HasColumnName("role_name");
+
+            builder.Property(x => x.CreatedAt)
+               .IsRequired()
+               .HasDefaultValueSql("GETUTCDATE()")
+               .HasColumnName("created_at");
+
+            builder.Property(x => x.UpdatedAt)
+                .HasDefaultValueSql("GETUTCDATE()")
+                .HasColumnName("updated_at");
+
+            builder.Property(x => x.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
         }
     }
 }

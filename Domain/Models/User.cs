@@ -2,7 +2,7 @@
 
 namespace adstaskhub_api.Domain.Models
 {
-    public class User
+    public class User : EntityBase
     {
         public virtual long Id { get; set; }
         public virtual string Name { get; set; }
@@ -14,6 +14,6 @@ namespace adstaskhub_api.Domain.Models
         public virtual Pronoun Pronoun { get; set; }
         public virtual long RoleId { get; set; }
         public virtual Role Role { get; set; }
-        public virtual bool Approved { get; set; }
+        public virtual bool IsApproved { get; set; }
     }
 }

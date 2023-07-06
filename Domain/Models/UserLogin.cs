@@ -2,7 +2,7 @@
 
 namespace adstaskhub_api.Domain.Models
 {
-    public class UserLogin
+    public class UserLogin : EntityBase
     {
         [Required(ErrorMessage = "O campo 'email' é obrigatório.")]
         [EmailAddress(ErrorMessage = "O campo 'email' deve ser um endereço de email válido.")]
