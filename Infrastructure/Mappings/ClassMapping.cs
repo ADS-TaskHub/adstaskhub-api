@@ -10,6 +10,8 @@ namespace adstaskhub_api.Infrastructure.Mappings
         {
             builder.ToTable("classes");
 
+            builder.HasKey(e => e.Id);
+
             builder.Property(x => x.ClassNumber).IsRequired().HasColumnName("class_number");
             builder.Property(x => x.PeriodId).IsRequired().HasColumnName("period_id");
             builder.HasOne(x => x.Period);
@@ -28,6 +30,15 @@ namespace adstaskhub_api.Infrastructure.Mappings
             builder.Property(x => x.UpdatedAt)
                 .HasDefaultValueSql("GETUTCDATE()")
                 .HasColumnName("updated_at");
+
+            builder.Property(x => x.CreatedBy)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("created_by");
+
+            builder.Property(x => x.UpdatedBy)
+                .HasMaxLength(255)
+                .HasColumnName("updated_by");
 
             builder.Property(x => x.IsDeleted)
                 .IsRequired()

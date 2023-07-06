@@ -31,7 +31,12 @@ namespace adstaskhub_api.Controllers
         {
             var userAuth = await _userRepository.GetUserByEmail(user.Email);
 
-            if (userAuth == null)
+            if (!userAuth.IsApproved)
+            {
+                return Unauthorized(new { message = "User not approved yet, wait for approval!" });
+            }
+
+            if (userAuth == null || userAuth.IsDeleted)
             {
                 return Unauthorized(new { message = "Invalid email or password!" });
             }

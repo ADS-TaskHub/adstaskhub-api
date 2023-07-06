@@ -10,6 +10,8 @@ namespace adstaskhub_api.Infrastructure.Mappings
         {
             builder.ToTable("users");
 
+            builder.HasKey(e => e.Id);
+
             builder.Property(x => x.Name).IsRequired().HasMaxLength(255).HasColumnName("name");
             builder.Property(x => x.Email).IsRequired().HasMaxLength(255).HasColumnName("email");
             builder.Property(x => x.Password).IsRequired().HasMaxLength(1000).HasColumnName("password");
@@ -39,6 +41,15 @@ namespace adstaskhub_api.Infrastructure.Mappings
             builder.Property(x => x.UpdatedAt)
                 .HasDefaultValueSql("GETUTCDATE()")
                 .HasColumnName("updated_at");
+
+            builder.Property(x => x.CreatedBy)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("created_by");
+
+            builder.Property(x => x.UpdatedBy)
+                .HasMaxLength(255)
+                .HasColumnName("updated_by");
 
             builder.Property(x => x.IsDeleted)
                 .IsRequired()

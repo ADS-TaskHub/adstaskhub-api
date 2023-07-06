@@ -19,6 +19,15 @@ namespace adstaskhub_api.Infrastructure.Mappings
                 .HasDefaultValueSql("GETUTCDATE()")
                 .HasColumnName("updated_at");
 
+            builder.Property(x => x.CreatedBy)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("created_by");
+
+            builder.Property(x => x.UpdatedBy)
+                .HasMaxLength(255)
+                .HasColumnName("updated_by");
+
             builder.Property(x => x.IsDeleted)
                 .IsRequired()
                 .HasDefaultValue(false)
