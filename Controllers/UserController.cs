@@ -18,6 +18,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<UserDTOBase>>> GetAllUsersDTO()
         {
             List<UserDTOBase> users = await _userRepository.GetAllUsersDTO();
@@ -32,25 +33,37 @@ namespace adstaskhub_api.Controllers
             return Ok(user);
         }
 
+        [HttpPut]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<UserDTOBase>> ChangeUserRole([FromBody] long userId, long roleId)
+        {
+            string updatedBy = User.Identity.Name;
+            UserDTOBase userResult = await _userRepository.ChangeUserRole(userId, roleId, updatedBy);
+            return Ok(userResult);
+        }
+
         [HttpPost]
         public async Task<ActionResult<UserDTOBase>> CreateUser([FromBody] UserCreateDTO user)
         {
-            UserDTOBase userResult = await _userRepository.CreateUser(user);
+            string createdBy = User.Identity.Name;
+            UserDTOBase userResult = await _userRepository.CreateUser(user, createdBy);
 
             return Ok(userResult);
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<UserDTOBase>> UpdateUser([FromBody] User user, long id)
         {
             user.Id = id;
-            UserDTOBase userResult = await _userRepository.UpdateUser(user, id);
+            string updatedBy = User.Identity.Name;
+            UserDTOBase userResult = await _userRepository.UpdateUser(user, id, updatedBy);
 
             return Ok(userResult);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<bool>> DeleteUser(long id)
         {
             bool deleted = await _userRepository.DeleteUser(id);

@@ -1,5 +1,6 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace adstaskhub_api.Controllers
@@ -16,6 +17,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<TaskDTO>>> GetAllTask()
         {
             List<TaskDTO> task = await _taskRepository.GetAllTasksDTO();
@@ -23,6 +25,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<List<TaskDTO>>> GetTaskDTOById(long id)
         {
             TaskDTO task = await _taskRepository.GetTaskDTOById(id);
@@ -30,6 +33,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, student_admin")]
         public async Task<ActionResult<TaskDTO>> CreateTask([FromBody] Domain.Models.Task task)
         {
             TaskDTO taskResult = await _taskRepository.CreateTask(task);
@@ -38,6 +42,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin, student_admin")]
         public async Task<ActionResult<TaskDTO>> UpdateTask([FromBody] Domain.Models.Task task, long id)
         {
             task.Id = id;
@@ -47,6 +52,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin, student_admin")]
         public async Task<ActionResult<bool>> DeleteTask(long id)
         {
             bool deleted = await _taskRepository.DeleteTask(id);

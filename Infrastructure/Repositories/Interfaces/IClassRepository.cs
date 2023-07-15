@@ -8,6 +8,7 @@ namespace adstaskhub_api.Infrastructure.Repositories.Interfaces
         Task<List<ClassDTO>> GetAllClassesDTO();
         Task<Class> GetClassById(long id);
         Task<ClassDTO> GetClassDTOById(long id);
+        Task<Class> GetClassByClassNumberAndPeriod(int classNumber, int periodNumber);
         Task<ClassDTO> CreateClass(Class @class);
         Task<ClassDTO> UpdateClass(Class @class, long id);
         Task<bool> DeleteClass(long id);

@@ -1,7 +1,9 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace adstaskhub_api.Controllers
 {
@@ -17,6 +19,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<PeriodDTO>>> GetAllPeriodsDTO()
         {
             List<PeriodDTO> periods = await _periodRepository.GetAllPeriodsDTO();
@@ -24,6 +27,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<PeriodDTO>>> GetPeriodDTOById(long id)
         {
             PeriodDTO periods = await _periodRepository.GetPeriodDTOById(id);
@@ -31,6 +35,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<PeriodDTO>> CreatePeriod([FromBody] Period period)
         {
             PeriodDTO periodResult = await _periodRepository.CreatePeriod(period);
@@ -39,6 +44,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<PeriodDTO>> UpdatePeriod([FromBody] Period period, long id)
         {
             period.Id = id;
@@ -48,6 +54,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<bool>> DeletePeriod(long id)
         {
             bool deleted = await _periodRepository.DeletePeriod(id);

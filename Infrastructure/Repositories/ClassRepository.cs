@@ -35,6 +35,15 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return _classMapper.MapToDTO(@class);
         }
 
+        public async Task<Class> GetClassByClassNumberAndPeriod(int classNumber, int periodNumber)
+        {
+            Class @class = await _dbContext.Classes
+                .Include(x => x.Period)
+                .FirstOrDefaultAsync(x => x.ClassNumber == classNumber && x.Period.Number == periodNumber);
+
+            return @class;
+        }
+
         public async Task<List<ClassDTO>> GetAllClassesDTO()
         {
             List<Class> classes = await _dbContext.Classes

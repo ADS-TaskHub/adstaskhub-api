@@ -33,18 +33,18 @@ namespace adstaskhub_api.Controllers
 
             if (!userAuth.IsApproved)
             {
-                return Unauthorized(new { message = "User not approved yet, wait for approval!" });
+                return Unauthorized(new { message = "Usuário ainda não aprovado, aguarde aprovação ou entre em contato conosco!" });
             }
 
             if (userAuth == null || userAuth.IsDeleted)
             {
-                return Unauthorized(new { message = "Invalid email or password!" });
+                return Unauthorized(new { message = "Email ou senha inválidos!" });
             }
 
             bool authenticated = await _authenticationService.VerifyPassword(user.Password, userAuth.Password);
             if (!authenticated)
             {
-                return Unauthorized(new { message = "Invalid email or password!" });
+                return Unauthorized(new { message = "Email ou senha inválidos!" });
             }
             var token = _tokenService.GenerateToken(userAuth);
             UserDTOBase userDto = _userMapper.MapToDTO(userAuth);
@@ -54,6 +54,16 @@ namespace adstaskhub_api.Controllers
                 user = userDto,
                 token
             };
+        }
+
+        [HttpPost]
+        [Route("register")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDTOBase>> RegisterUser([FromBody] UserCreateDTO user)
+        {
+            await _userRepository.CreateUser(user, "web");
+            
+            return Ok(await _userRepository.GetUserByEmail(user.Email));
         }
     }
 }

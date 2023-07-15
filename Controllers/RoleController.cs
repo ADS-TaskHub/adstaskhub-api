@@ -1,7 +1,9 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace adstaskhub_api.Controllers
 {
@@ -17,6 +19,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<RoleDTO>>> GetAllRolesDTO()
         {
             List<RoleDTO> roles = await _roleRepository.GetAllRolesDTO();
@@ -24,6 +27,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<RoleDTO>>> GetRoleDTOById(long id)
         {
             RoleDTO role = await _roleRepository.GetRoleDTOById(id);
@@ -31,6 +35,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<RoleDTO>> CreateRole([FromBody] Role role)
         {
             RoleDTO roleResult = await _roleRepository.CreateRole(role);
@@ -39,6 +44,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<RoleDTO>> UpdateRole([FromBody] Role role, long id)
         {
             role.Id = id;
@@ -48,6 +54,7 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<bool>> DeleteRole(long id)
         {
             bool deleted = await _roleRepository.DeleteRole(id);
