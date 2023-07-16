@@ -2,7 +2,6 @@
 using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Mappers.Interfaces;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace adstaskhub_api.Infrastructure.Repositories
@@ -18,7 +17,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             _userMapper = userMapper;
         }
 
-        public async Task<User> GetUserById(long id)
+        public async Task<User> GetUserByIdAsync(long id)
         {
             return await _dbContext.Users
                 .Include(x => x.Role)
@@ -26,7 +25,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<UserDTOBase> GetUserDTOById(long id)
+        public async Task<UserDTOBase> GetUserDTOByIdAsync(long id)
         {
             User user = await _dbContext.Users
                 .Include(x => x.Role)
@@ -45,7 +44,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task<List<UserDTOBase>> GetUsersDTOByClass(int classNumber)
+        public async Task<List<UserDTOBase>> GetUsersDTOByClassAsync(int classNumber)
         {
             List<User> users = await _dbContext.Users
                 .Include(x => x.Role)
@@ -57,7 +56,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return users.Select(user => _userMapper.MapToDTO(user)).ToList();
         }
 
-        public async Task<List<User>> GetUsersByClass(int classNumber)
+        public async Task<List<User>> GetUsersByClassAsync(int classNumber)
         {
             return await _dbContext.Users
                 .Include(x => x.Role)
@@ -67,7 +66,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<UserDTOBase>> GetAllUsersDTO()
+        public async Task<List<UserDTOBase>> GetAllUsersDTOAsync()
         {
             List<User> users = await _dbContext.Users
                  .Include(x => x.Role)
@@ -78,7 +77,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return users.Select(user => _userMapper.MapToDTO(user)).ToList();
         }
 
-        public async Task<List<UserDTOBase>> GetUsersDTOByClassWithPagination(int classNumber, int pageNumber, int pageSize)
+        public async Task<List<UserDTOBase>> GetUsersDTOByClassWithPaginationAsync(int classNumber, int pageNumber, int pageSize)
         {
             var users = await _dbContext.Users
                 .Include(x => x.Role)
@@ -95,7 +94,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return pagedUsers.Select(user => _userMapper.MapToDTO(user)).ToList();
         }
 
-        public async Task<List<UserDTOBase>> GetAllUsersDTOWithPagination(int pageNumber, int pageSize)
+        public async Task<List<UserDTOBase>> GetAllUsersDTOWithPaginationAsync(int pageNumber, int pageSize)
         {
             var users = await _dbContext.Users
                  .Include(x => x.Role)
@@ -120,16 +119,15 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return _userMapper.MapToDTO(user);
         }
 
-        public async Task<UserDTOBase> UpdateUser(User user, long id, string updateBy)
+        public async Task<UserDTOBase> UpdateUserAsync(User user, long id)
         {
-            User userById = await GetUserById(id) ?? throw new Exception($"Usuário de ID: {id} não encontrado");
+            User userById = await GetUserByIdAsync(id) ?? throw new Exception($"Usuário de ID: {id} não encontrado");
             userById.Name = user.Name;
             userById.Email = user.Email;
             userById.Phone = user.Phone;
             userById.ClassId = user.ClassId;
             userById.Pronoun = user.Pronoun;
             userById.RoleId = user.RoleId;
-            userById.UpdatedBy = updateBy;
             userById.UpdatedAt = DateTime.UtcNow;
 
             if (!string.IsNullOrEmpty(user.Password))
@@ -144,56 +142,10 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return _userMapper.MapToDTO(userById);
         }
 
-        public async Task<UserDTOBase> ChangeUserClass(long userId, int newClassNumber, string updateBy)
+        public async Task<bool> DeleteUserAsync(long id)
         {
-            User user = await _dbContext.Users
-                .Include(x => x.Class)
-                    .ThenInclude(x => x.Period)
-                .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new Exception($"Usuário de ID: {userId} não encontrado");
-            Class newClass = await _dbContext.Classes.FirstOrDefaultAsync(x => x.ClassNumber == newClassNumber) ?? throw new Exception($"Classe de número: {newClassNumber} não encontrado");
-            user.ClassId = newClass.Id;
-            user.UpdatedBy = updateBy;
-            user.UpdatedAt = DateTime.UtcNow;
-
-            _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
-
-            return _userMapper.MapToDTO(user);
-        }
-
-        public async Task<UserDTOBase> ChangeUserRole(long userId, long roleId, string updateBy)
-        {
-            User user = await _dbContext.Users
-                .Include(x => x.Role)
-                .FirstOrDefaultAsync(x => x.Id == userId) ?? throw new Exception($"Usuário de ID: {userId} não encontrado");
-            Role role = await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == roleId) ?? throw new Exception($"Cargo de ID: {roleId} não encontrado");
-
-            user.RoleId = roleId;
-            user.UpdatedBy = updateBy;
-            user.UpdatedAt = DateTime.UtcNow;
-
-            _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
-
-            return _userMapper.MapToDTO(user);
-        }
-
-        public async Task<bool> DeleteUser(long id)
-        {
-            User userById = await GetUserById(id) ?? throw new Exception($"Usuário de ID: {id} não encontrado");
+            User userById = await GetUserByIdAsync(id) ?? throw new Exception($"Usuário de ID: {id} não encontrado");
             _dbContext.Users.Remove(userById);
-            await _dbContext.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> SoftDeleteUser(long id, string updateBy)
-        {
-            User userById = await GetUserById(id) ?? throw new Exception($"Usuário de ID: {id} não encontrado");
-
-            userById.IsDeleted = true;
-            userById.UpdatedBy = updateBy;
-            userById.UpdatedAt = DateTime.UtcNow;
-
             await _dbContext.SaveChangesAsync();
             return true;
         }

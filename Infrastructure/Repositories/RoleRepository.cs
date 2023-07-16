@@ -17,25 +17,25 @@ namespace adstaskhub_api.Infrastructure.Repositories
             _roleMapper = roleMapper;
         }
 
-        public async Task<Role> GetRoleById(long id)
+        public async Task<Role> GetRoleByIdAsync(long id)
         {
             return await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<RoleDTO> GetRoleDTOById(long id)
+        public async Task<RoleDTO> GetRoleDTOByIdAsync(long id)
         {
             Role role =  await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
             return _roleMapper.MapToDTO(role);
         }
 
-        public async Task<List<RoleDTO>> GetAllRolesDTO()
+        public async Task<List<RoleDTO>> GetAllRolesDTOAsync()
         {
             List<Role> roles = await _dbContext.Roles.ToListAsync();
 
             return roles.Select(role => _roleMapper.MapToDTO(role)).ToList();
         }
 
-        public async Task<RoleDTO> CreateRole(Role role)
+        public async Task<RoleDTO> CreateRoleAsync(Role role)
         {
             await _dbContext.Roles.AddAsync(role);
             await _dbContext.SaveChangesAsync();
@@ -43,9 +43,9 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return _roleMapper.MapToDTO(role);
         }
 
-        public async Task<RoleDTO> UpdateRole(Role role, long id)
+        public async Task<RoleDTO> UpdateRoleAsync(Role role, long id)
         {
-            Role roleById = await GetRoleById(id) ?? throw new Exception($"Role for ID: {id} not found");
+            Role roleById = await GetRoleByIdAsync(id) ?? throw new Exception($"Role for ID: {id} not found");
             roleById.Id = role.Id;
             roleById.Name = role.Name;
             roleById.Description = role.Description;
@@ -56,17 +56,17 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return _roleMapper.MapToDTO(roleById);
         }
 
-        public async Task<bool> DeleteRole(long id)
+        public async Task<bool> DeleteRoleAsync(long id)
         {
-            Role roleById = await GetRoleById(id) ?? throw new Exception($"Role for ID: {id} not found");
+            Role roleById = await GetRoleByIdAsync(id) ?? throw new Exception($"Role for ID: {id} not found");
             _dbContext.Roles.Remove(roleById);
             await _dbContext.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> SoftDeleteRole(long id)
+        public async Task<bool> SoftDeleteRoleAsync(long id)
         {
-            Role roleById = await GetRoleById(id) ?? throw new Exception($"Role for ID: {id} not found");
+            Role roleById = await GetRoleByIdAsync(id) ?? throw new Exception($"Role for ID: {id} not found");
 
             roleById.IsDeleted = true;
 

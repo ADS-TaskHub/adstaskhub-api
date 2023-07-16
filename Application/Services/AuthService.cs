@@ -1,5 +1,6 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Application.Services.Interfaces;
+using adstaskhub_api.Helpers.ErrorMessages;
 using adstaskhub_api.Infrastructure.Mappers.Interfaces;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 
@@ -29,7 +30,7 @@ namespace adstaskhub_api.Application.Services
                 return new AuthResultDTO
                 {
                     Success = false,
-                    Message = "Email ou senha inválidos!"
+                    Message = UserErrorMessages.InvalidEmailOrPassword
                 };
             }
 
@@ -38,7 +39,7 @@ namespace adstaskhub_api.Application.Services
                 return new AuthResultDTO
                 {
                     Success = false,
-                    Message = "Usuário ainda não aprovado, aguarde aprovação ou entre em contato conosco!"
+                    Message = UserErrorMessages.UserNotApproved
                 };
             }
 
@@ -48,7 +49,7 @@ namespace adstaskhub_api.Application.Services
                 return new AuthResultDTO
                 {
                     Success = false,
-                    Message = "Email ou senha inválidos!"
+                    Message = UserErrorMessages.InvalidEmailOrPassword
                 };
             }
 

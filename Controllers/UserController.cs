@@ -1,6 +1,5 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Application.Services.Interfaces;
-using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,27 +23,31 @@ namespace adstaskhub_api.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<UserDTOBase>>> GetAllUsersDTO()
         {
-            List<UserDTOBase> users = await _userRepository.GetAllUsersDTO();
-            return Ok(users);
+            try
+            {
+                List<UserDTOBase> users = await _userRepository.GetAllUsersDTOAsync();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao obter usuários: " + ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<ActionResult<List<UserDTOBase>>> GetUserDTOById(long id)
         {
-            UserDTOBase user = await _userRepository.GetUserDTOById(id);
-            return Ok(user);
+            try
+            {
+                UserDTOBase user = await _userRepository.GetUserDTOByIdAsync(id);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro obter usuário: " + ex.Message);
+            }
         }
-
-        [HttpPut]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserDTOBase>> ChangeUserRole([FromBody] long userId, long roleId)
-        {
-            string updatedBy = User.Identity.Name;
-            UserDTOBase userResult = await _userRepository.ChangeUserRole(userId, roleId, updatedBy);
-            return Ok(userResult);
-        }
-
 
         [HttpPost]
         [Route("register")]
@@ -62,23 +65,68 @@ namespace adstaskhub_api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{userId}/approve")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<UserDTOBase>> UpdateUser([FromBody] User user, long id)
+        public async Task<ActionResult<UserDTOBase>> ApproveUser(long userId)
         {
-            user.Id = id;
             string updatedBy = User.Identity.Name;
-            UserDTOBase userResult = await _userRepository.UpdateUser(user, id, updatedBy);
+            try
+            {
+                UserDTOBase userUpdated = await _userService.ApproveUser(userId, updatedBy);
+                return Ok(userUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao aprovar usuário: " + ex.Message);
+            }
+        }
 
-            return Ok(userResult);
+        [HttpPut("{userId}/change-class/{newClassNumber}/{newPeriodNumber}")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<UserDTOBase>> ChangeUserClass(long userId, int newClassNumber, int newPeriodNumber)
+        {
+            string updatedBy = User.Identity.Name;
+            try
+            {
+                UserDTOBase userUpdated = await _userService.ChangeUserClass(userId, newClassNumber, newPeriodNumber, updatedBy);
+                return Ok(userUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao alterar usuário de classe: " + ex.Message);
+            }
+        }
+
+        [HttpPut("{userId}/change-role/{roleId}")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<UserDTOBase>> ChangeUserRole(long userId, long roleId)
+        {
+            string updatedBy = User.Identity.Name;
+            try
+            {
+                UserDTOBase userUpdated = await _userService.ChangeUserRole(userId, roleId, updatedBy);
+                return Ok(userUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao alterar cargo de usuário: " + ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<bool>> DeleteUser(long id)
         {
-            bool deleted = await _userRepository.DeleteUser(id);
-            return Ok(deleted);
+            string updatedBy = User.Identity.Name;
+            try
+            {
+                bool deleted = await _userService.SoftDeleteUser(id, updatedBy);
+                return Ok(deleted);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao deletar usuário: " + ex.Message);
+            }
         }
     }
 }

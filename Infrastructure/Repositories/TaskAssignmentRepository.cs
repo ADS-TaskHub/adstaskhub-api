@@ -56,7 +56,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             taskAssignmentById.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.TasksAssignment.Update(taskAssignmentById);
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return taskAssignmentById;
         }
