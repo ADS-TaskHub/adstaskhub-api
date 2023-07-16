@@ -81,7 +81,6 @@ namespace adstaskhub_api.Application.Services
             return await _userRepository.UpdateUserAsync(user, userId);
         }
 
-
         public async Task<UserDTOBase> ChangeUserClass(long userId, int newClassNumber, int newPeriodNumber, string updateBy)
         {
             if (userId == null)

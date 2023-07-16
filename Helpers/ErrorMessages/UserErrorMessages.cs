@@ -1,6 +1,6 @@
 ﻿namespace adstaskhub_api.Helpers.ErrorMessages
 {
-    public class UserErrorMessages
+    public static class UserErrorMessages
     {
         public const string UserNotFound = "Usuário não encontrado.";
         public const string InvalidEmailOrPassword = "Email ou senha inválidos.";

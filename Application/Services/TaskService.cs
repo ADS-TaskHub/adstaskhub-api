@@ -16,7 +16,7 @@ namespace adstaskhub_api.Application.Services
 
         public async Task<List<TaskAssignment>> AssignTaskToClassUsers(Domain.Models.Task task, Class @class)
         {
-            List<User> classUsers = await _userRepository.GetUsersByClass(@class.ClassNumber);
+            List<User> classUsers = await _userRepository.GetUsersByClassAsync(@class.ClassNumber);
 
             List<TaskAssignment> assignments = new();
             foreach (User user in classUsers)

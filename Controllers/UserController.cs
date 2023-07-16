@@ -49,22 +49,6 @@ namespace adstaskhub_api.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("register")]
-        [AllowAnonymous]
-        public async Task<ActionResult<UserDTOBase>> RegisterUser([FromBody] UserCreateDTO user)
-        {
-            try
-            {
-                UserDTOBase createdUser = await _userService.CreateUser(user, "web");
-                return Ok(createdUser);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Erro durante o registro do usuário: " + ex.Message);
-            }
-        }
-
         [HttpPut("{userId}/approve")]
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<UserDTOBase>> ApproveUser(long userId)

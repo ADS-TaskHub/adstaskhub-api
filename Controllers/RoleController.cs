@@ -22,7 +22,7 @@ namespace adstaskhub_api.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<RoleDTO>>> GetAllRolesDTO()
         {
-            List<RoleDTO> roles = await _roleRepository.GetAllRolesDTO();
+            List<RoleDTO> roles = await _roleRepository.GetAllRolesDTOAsync();
             return Ok(roles);
         }
 
@@ -30,7 +30,7 @@ namespace adstaskhub_api.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<List<RoleDTO>>> GetRoleDTOById(long id)
         {
-            RoleDTO role = await _roleRepository.GetRoleDTOById(id);
+            RoleDTO role = await _roleRepository.GetRoleDTOByIdAsync(id);
             return Ok(role);
         }
 
@@ -38,7 +38,7 @@ namespace adstaskhub_api.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<RoleDTO>> CreateRole([FromBody] Role role)
         {
-            RoleDTO roleResult = await _roleRepository.CreateRole(role);
+            RoleDTO roleResult = await _roleRepository.CreateRoleAsync(role);
 
             return Ok(roleResult);
         }
@@ -48,7 +48,7 @@ namespace adstaskhub_api.Controllers
         public async Task<ActionResult<RoleDTO>> UpdateRole([FromBody] Role role, long id)
         {
             role.Id = id;
-            RoleDTO roleResult = await _roleRepository.UpdateRole(role, id);
+            RoleDTO roleResult = await _roleRepository.UpdateRoleAsync(role, id);
 
             return Ok(roleResult);
         }
@@ -57,7 +57,7 @@ namespace adstaskhub_api.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult<bool>> DeleteRole(long id)
         {
-            bool deleted = await _roleRepository.DeleteRole(id);
+            bool deleted = await _roleRepository.DeleteRoleAsync(id);
             return Ok(deleted);
         }
     }
