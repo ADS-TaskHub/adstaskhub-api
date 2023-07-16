@@ -1,13 +1,14 @@
-﻿using adstaskhub_api.Domain.Models;
+﻿using adstaskhub_api.Application.Services.Interfaces;
+using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 
 namespace adstaskhub_api.Application.Services
 {
-    public class TaskAssignmentService
+    public class TaskService : ITaskService
     {
         private readonly ITaskAssignmentRepository _taskAssignmentRepository;
         private readonly IUserRepository _userRepository;
-        public TaskAssignmentService(ITaskAssignmentRepository taskAssignment, IUserRepository userRepository)
+        public TaskService(ITaskAssignmentRepository taskAssignment, IUserRepository userRepository)
         {
             _taskAssignmentRepository = taskAssignment;
             _userRepository = userRepository;
@@ -41,6 +42,5 @@ namespace adstaskhub_api.Application.Services
 
             return assignments;
         }
-
     }
 }

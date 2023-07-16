@@ -18,7 +18,7 @@ namespace adstaskhub_api.Infrastructure.Mappings
             builder.Property(x => x.Phone).IsRequired().HasMaxLength(15).HasColumnName("phone");
             builder.Property(x => x.ClassId).HasColumnName("class_id");
             builder.Property(x => x.Pronoun).IsRequired().HasColumnName("pronoun");
-            builder.Property(x => x.RoleId).IsRequired().HasDefaultValue(3).HasColumnName("role_id");
+            builder.Property(x => x.RoleId).IsRequired().HasDefaultValue(2).HasColumnName("role_id");
             builder.Property(x => x.IsApproved).IsRequired().HasDefaultValue(false).HasColumnName("is_approved");
 
             builder.HasOne(x => x.Class)

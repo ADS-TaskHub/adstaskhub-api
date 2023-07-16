@@ -9,12 +9,12 @@ namespace adstaskhub_api.Infrastructure.Repositories.Interfaces
         Task<List<UserDTOBase>> GetAllUsersDTO();
         Task<User> GetUserById(long id);
         Task<UserDTOBase> GetUserDTOById(long id);
-        Task<User> GetUserByEmail(string email);
+        Task<User> GetUserByEmailAsync(string email);
         Task<List<UserDTOBase>> GetUsersDTOByClass(int classNumber);
         Task<List<User>> GetUsersByClass(int classNumber);
         Task<List<UserDTOBase>> GetUsersDTOByClassWithPagination(int classNumbe, int pageNumber, int pageSize);
         Task<List<UserDTOBase>> GetAllUsersDTOWithPagination(int pageNumber, int pageSize);
-        Task<UserDTOBase> CreateUser(UserCreateDTO user, string createdBy);
+        Task<UserDTOBase> CreateUserAsync(User user);
         Task<UserDTOBase> UpdateUser(User user, long id, string updateBy);
         Task<UserDTOBase> ChangeUserClass(long userId, int newClassNumber, string updateBy);
         Task<UserDTOBase> ChangeUserRole(long userId, long roleId, string updateBy);

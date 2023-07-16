@@ -1,4 +1,5 @@
-﻿using adstaskhub_api.Domain.Models;
+﻿using adstaskhub_api.Application.Services.Interfaces;
+using adstaskhub_api.Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace adstaskhub_api.Application.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly string _hashKey;
 

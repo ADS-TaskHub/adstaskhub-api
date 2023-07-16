@@ -1,4 +1,5 @@
 using adstaskhub_api.Application.Services;
+using adstaskhub_api.Application.Services.Interfaces;
 using adstaskhub_api.Infrastructure;
 using adstaskhub_api.Infrastructure.Mappers;
 using adstaskhub_api.Infrastructure.Mappers.Interfaces;
@@ -85,8 +86,10 @@ builder.Services.AddScoped<IPeriodMapper, PeriodMapper>();
 builder.Services.AddScoped<ITaskMapper, TaskMapper>();
 builder.Services.AddScoped<IRoleMapper, RoleMapper>();
 
-builder.Services.AddScoped<TokenService>(sp => new TokenService(hashKey));
-builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<ITokenService, TokenService>(sp => new TokenService(hashKey));
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 var app = builder.Build();

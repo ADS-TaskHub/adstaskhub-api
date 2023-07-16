@@ -1,4 +1,5 @@
 ﻿using adstaskhub_api.Application.DTOs;
+using adstaskhub_api.Application.Services.Interfaces;
 using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,12 @@ namespace adstaskhub_api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IUserService userService)
         {
             _userRepository = userRepository;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -42,13 +45,21 @@ namespace adstaskhub_api.Controllers
             return Ok(userResult);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<UserDTOBase>> CreateUser([FromBody] UserCreateDTO user)
-        {
-            string createdBy = User.Identity.Name;
-            UserDTOBase userResult = await _userRepository.CreateUser(user, createdBy);
 
-            return Ok(userResult);
+        [HttpPost]
+        [Route("register")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDTOBase>> RegisterUser([FromBody] UserCreateDTO user)
+        {
+            try
+            {
+                UserDTOBase createdUser = await _userService.CreateUser(user, "web");
+                return Ok(createdUser);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro durante o registro do usuário: " + ex.Message);
+            }
         }
 
         [HttpPut("{id}")]

@@ -11,13 +11,11 @@ namespace adstaskhub_api.Infrastructure.Repositories
     {
         private readonly DBContext _dbContext;
         private readonly IUserMapper _userMapper;
-        private readonly IClassRepository _classRepository;
 
-        public UserRepository(DBContext DBContext, IUserMapper userMapper, IClassRepository classRepository)
+        public UserRepository(DBContext DBContext, IUserMapper userMapper)
         {
             _dbContext = DBContext;
             _userMapper = userMapper;
-            _classRepository = classRepository;
         }
 
         public async Task<User> GetUserById(long id)
@@ -38,7 +36,7 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return _userMapper.MapToDTO(user);
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _dbContext.Users
                 .Include(x => x.Role)
@@ -114,21 +112,8 @@ namespace adstaskhub_api.Infrastructure.Repositories
         }
 
 
-        public async Task<UserDTOBase> CreateUser(UserCreateDTO userCreate, string createdBy)
+        public async Task<UserDTOBase> CreateUserAsync(User user)
         {
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userCreate.Password);
-            userCreate.Password = hashedPassword;
-
-            User user = _userMapper.MapToEntity(userCreate);
-
-            Class @class = await _classRepository.GetClassByClassNumberAndPeriod(user.Class.ClassNumber, user.Class.Period.Number) ?? throw new InvalidOperationException("Classe não encontrada");
-            user.ClassId = @class.Id;
-            user.Class = @class;
-            user.Class.Period = @class.Period;
-            user.Class.PeriodId = @class.PeriodId;
-            user.CreatedAt = DateTime.UtcNow;
-            user.CreatedBy = createdBy;
-
             await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
 
