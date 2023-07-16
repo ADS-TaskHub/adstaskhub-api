@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using adstaskhub_api.Infrastructure;
 
@@ -11,13 +12,15 @@ using adstaskhub_api.Infrastructure;
 namespace adstaskhub_api.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20230706155516_FixEntityUsers")]
+    partial class FixEntityUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -312,7 +315,8 @@ namespace adstaskhub_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClassId")
+                    b.Property<long?>("ClassId")
+                        .IsRequired()
                         .HasColumnType("bigint")
                         .HasColumnName("class_id");
 
@@ -371,7 +375,7 @@ namespace adstaskhub_api.Migrations
                     b.Property<long>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasDefaultValue(2L)
+                        .HasDefaultValue(3L)
                         .HasColumnName("role_id");
 
                     b.Property<DateTime?>("UpdatedAt")

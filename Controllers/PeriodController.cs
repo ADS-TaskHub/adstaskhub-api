@@ -1,7 +1,9 @@
-﻿using adstaskhub_api.Models;
-using adstaskhub_api.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using adstaskhub_api.Application.DTOs;
+using adstaskhub_api.Domain.Models;
+using adstaskhub_api.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace adstaskhub_api.Controllers
 {
@@ -17,38 +19,43 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Period>>> GetAllPeriods()
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<PeriodDTO>>> GetAllPeriodsDTO()
         {
-            List<Period> periods = await _periodRepository.GetAllPeriods();
+            List<PeriodDTO> periods = await _periodRepository.GetAllPeriodsDTO();
             return Ok(periods);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Period>>> GetPeriodById(long id)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<PeriodDTO>>> GetPeriodDTOById(long id)
         {
-            Period periods = await _periodRepository.GetPeriodById(id);
+            PeriodDTO periods = await _periodRepository.GetPeriodDTOById(id);
             return Ok(periods);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Period>> CreatePeriod([FromBody] Period period)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<PeriodDTO>> CreatePeriod([FromBody] Period period)
         {
-            Period periodResult = await _periodRepository.CreatePeriod(period);
+            PeriodDTO periodResult = await _periodRepository.CreatePeriod(period);
 
             return Ok(periodResult);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Period>> UpdatePeriod([FromBody] Period period, long id)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<PeriodDTO>> UpdatePeriod([FromBody] Period period, long id)
         {
             period.Id = id;
-            Period periodResult = await _periodRepository.UpdatePeriod(period, id);
+            PeriodDTO periodResult = await _periodRepository.UpdatePeriod(period, id);
 
             return Ok(periodResult);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Period>> DeletePeriod(long id)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<bool>> DeletePeriod(long id)
         {
             bool deleted = await _periodRepository.DeletePeriod(id);
             return Ok(deleted);

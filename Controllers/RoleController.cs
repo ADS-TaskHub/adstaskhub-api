@@ -1,7 +1,9 @@
-﻿using adstaskhub_api.Models;
-using adstaskhub_api.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using adstaskhub_api.Application.DTOs;
+using adstaskhub_api.Domain.Models;
+using adstaskhub_api.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace adstaskhub_api.Controllers
 {
@@ -17,40 +19,45 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Role>>> GetAllRoles()
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<RoleDTO>>> GetAllRolesDTO()
         {
-            List<Role> roles = await _roleRepository.GetAllRoles();
+            List<RoleDTO> roles = await _roleRepository.GetAllRolesDTOAsync();
             return Ok(roles);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Role>>> GetRoleById(long id)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<RoleDTO>>> GetRoleDTOById(long id)
         {
-            Role role = await _roleRepository.GetRoleById(id);
+            RoleDTO role = await _roleRepository.GetRoleDTOByIdAsync(id);
             return Ok(role);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Role>> CreateRole([FromBody] Role role)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<RoleDTO>> CreateRole([FromBody] Role role)
         {
-            Role roleResult = await _roleRepository.CreateRole(role);
+            RoleDTO roleResult = await _roleRepository.CreateRoleAsync(role);
 
             return Ok(roleResult);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Role>> UpdateRole([FromBody] Role role, long id)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<RoleDTO>> UpdateRole([FromBody] Role role, long id)
         {
             role.Id = id;
-            Role roleResult = await _roleRepository.UpdateRole(role, id);
+            RoleDTO roleResult = await _roleRepository.UpdateRoleAsync(role, id);
 
             return Ok(roleResult);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Role>> DeleteRole(long id)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<bool>> DeleteRole(long id)
         {
-            bool deleted = await _roleRepository.DeleteRole(id);
+            bool deleted = await _roleRepository.DeleteRoleAsync(id);
             return Ok(deleted);
         }
     }
