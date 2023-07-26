@@ -124,6 +124,28 @@ namespace adstaskhub_api.Application.Services
             return await _userRepository.UpdateUserAsync(user, userId);
         }
 
+        public async Task<UserDTOBase> ChangeUserPassword(long userId, string newPassword, string updateBy)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException(nameof(userId), UserErrorMessages.UserCreationDataNull);
+            }
+
+            if (string.IsNullOrEmpty(updateBy))
+            {
+                throw new ArgumentNullException(nameof(updateBy), UserErrorMessages.UserCreationDataNull);
+            }
+
+            User user = await _userRepository.GetUserByIdAsync(userId) ?? throw new Exception(UserErrorMessages.UserNotFound);
+
+            string hashedPassword = _passwordService.HashPassword(newPassword);
+            user.Password = hashedPassword;
+            user.UpdatedBy = updateBy;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            return await _userRepository.UpdateUserAsync(user, userId);
+        }
+
         public async Task<bool> SoftDeleteUser(long userId, string updateBy)
         {
             if (userId == null)

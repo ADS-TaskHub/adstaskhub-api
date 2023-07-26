@@ -1,5 +1,6 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Application.Services.Interfaces;
+using adstaskhub_api.Domain.Models;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -94,6 +95,22 @@ namespace adstaskhub_api.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Erro ao alterar cargo de usuário: " + ex.Message);
+            }
+        }
+
+        [HttpPut("{userId}/change-password")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<UserDTOBase>> ChangeUserPassword(long userId, string newPassword)
+        {
+            string updatedBy = User.Identity.Name;
+            try
+            {
+                UserDTOBase userUpdated = await _userService.ChangeUserPassword(userId, newPassword, updatedBy);
+                return Ok(userUpdated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao alterar senha de usuário: " + ex.Message);
             }
         }
 

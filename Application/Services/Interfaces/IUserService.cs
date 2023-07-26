@@ -8,6 +8,7 @@ namespace adstaskhub_api.Application.Services.Interfaces
         Task<UserDTOBase> ApproveUser(long userId, string updateBy);
         Task<UserDTOBase> ChangeUserClass(long userId, int newClassNumber, int newPeriodNumber, string updateBy);
         Task<UserDTOBase> ChangeUserRole(long userId, long roleId, string updateBy);
+        Task<UserDTOBase> ChangeUserPassword(long userId, string newPassword, string updateBy);
         Task<bool> SoftDeleteUser(long id, string updateBy);
     }
 }
