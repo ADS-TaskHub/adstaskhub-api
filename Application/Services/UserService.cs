@@ -124,27 +124,6 @@ namespace adstaskhub_api.Application.Services
             return await _userRepository.UpdateUserAsync(user, userId);
         }
 
-        public async Task<UserDTOBase> ChangeUserClass(long userId, int newClassNumber, int newPeriodNumber, string updatedBy)
-        {
-            User user = await _userRepository.GetUserByIdAsync(userId);
-            if (user == null)
-            {
-                throw new ArgumentException(UserErrorMessages.UserNotFound);
-            }
-
-            Class newClass = await _classRepository.GetClassByClassNumberAndPeriod(newClassNumber, newPeriodNumber);
-            if (newClass == null)
-            {
-                throw new ArgumentException(ClassErrorMessages.ClassNotFound);
-            }
-
-            user.ClassId = newClass.Id;
-            user.UpdatedAt = DateTime.UtcNow;
-            user.UpdatedBy = updatedBy;
-
-            return await _userRepository.UpdateUserAsync(user, userId);
-        }
-
         public async Task<bool> SoftDeleteUser(long userId, string updateBy)
         {
             if (userId == null)
