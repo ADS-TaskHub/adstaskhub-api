@@ -62,11 +62,6 @@ namespace adstaskhub_api.Application.Services
 
         public async Task<UserDTOBase> ApproveUser(long userId, string updateBy)
         {
-            if (userId == null)
-            {
-                throw new ArgumentNullException(nameof(userId), UserErrorMessages.UserCreationDataNull);
-            }
-
             if (string.IsNullOrEmpty(updateBy))
             {
                 throw new ArgumentNullException(nameof(updateBy), UserErrorMessages.UserCreationDataNull);
@@ -83,11 +78,6 @@ namespace adstaskhub_api.Application.Services
 
         public async Task<UserDTOBase> ChangeUserClass(long userId, int newClassNumber, int newPeriodNumber, string updateBy)
         {
-            if (userId == null)
-            {
-                throw new ArgumentNullException(nameof(userId), UserErrorMessages.UserCreationDataNull);
-            }
-
             if (string.IsNullOrEmpty(updateBy))
             {
                 throw new ArgumentNullException(nameof(updateBy), UserErrorMessages.UserCreationDataNull);
@@ -104,11 +94,6 @@ namespace adstaskhub_api.Application.Services
 
         public async Task<UserDTOBase> ChangeUserRole(long userId, long roleId, string updateBy)
         {
-            if (userId == null)
-            {
-                throw new ArgumentNullException(nameof(userId), UserErrorMessages.UserCreationDataNull);
-            }
-
             if (string.IsNullOrEmpty(updateBy))
             {
                 throw new ArgumentNullException(nameof(updateBy), UserErrorMessages.UserCreationDataNull);
@@ -126,11 +111,6 @@ namespace adstaskhub_api.Application.Services
 
         public async Task<bool> SoftDeleteUser(long userId, string updateBy)
         {
-            if (userId == null)
-            {
-                throw new ArgumentNullException(nameof(userId), UserErrorMessages.UserCreationDataNull);
-            }
-
             if (string.IsNullOrEmpty(updateBy))
             {
                 throw new ArgumentNullException(nameof(updateBy), UserErrorMessages.UserCreationDataNull);
