@@ -1,8 +1,11 @@
 ﻿using adstaskhub_api.Application.DTOs;
 using adstaskhub_api.Application.Services.Interfaces;
+using adstaskhub_api.Domain.Models;
+using adstaskhub_api.Infrastructure.Repositories;
 using adstaskhub_api.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace adstaskhub_api.Controllers
 {
@@ -21,7 +24,7 @@ namespace adstaskhub_api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<List<UserDTOBase>>> GetAllUsersDTO()
+        public async Task<ActionResult<List<UserDTOBase>>> GetAllUsers()
         {
             try
             {
@@ -35,8 +38,8 @@ namespace adstaskhub_api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
-        public async Task<ActionResult<List<UserDTOBase>>> GetUserDTOById(long id)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<List<UserDTOBase>>> GetUserById(long id)
         {
             try
             {
@@ -48,6 +51,56 @@ namespace adstaskhub_api.Controllers
                 return BadRequest("Erro obter usuário: " + ex.Message);
             }
         }
+
+        [HttpGet("myuser")]
+        [Authorize]
+        public async Task<ActionResult<UserDTOBase>> GetMyUser()
+        {
+            try
+            {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                UserDTOBase user = await _userRepository.GetUserDTOByIdAsync(userId);
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao obter informações do usuário: " + ex.Message);
+            }
+        }
+
+        [HttpGet("byclass/{classNumber}")]
+        [Authorize(Roles = "admin, student_admin")]
+        public async Task<ActionResult<List<UserDTOBase>>> GetUsersByClass(int classNumber, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                List<UserDTOBase> users = await _userRepository.GetUsersDTOByClassWithPaginationAsync(classNumber, pageNumber, pageSize);
+
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao obter usuários por classe: " + ex.Message);
+            }
+        }
+
+        [HttpGet("notapproved")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<User>>> GetNotApprovedUsers()
+        {
+            try
+            {
+                List<User> users = await _userRepository.GetNotApprovedUsersAsync();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao obter usuários não aprovados: " + ex.Message);
+            }
+        }
+
 
         [HttpPut("{userId}/approve")]
         [Authorize(Roles = "admin")]

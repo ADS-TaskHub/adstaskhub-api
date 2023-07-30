@@ -12,8 +12,9 @@ namespace adstaskhub_api.Infrastructure.Repositories.Interfaces
         Task<User> GetUserByEmailAsync(string email);
         Task<List<UserDTOBase>> GetUsersDTOByClassAsync(int classNumber);
         Task<List<User>> GetUsersByClassAsync(int classNumber);
-        Task<List<UserDTOBase>> GetUsersDTOByClassWithPaginationAsync(int classNumbe, int pageNumber, int pageSize);
+        Task<List<UserDTOBase>> GetUsersDTOByClassWithPaginationAsync(int classNumber, int pageNumber, int pageSize);
         Task<List<UserDTOBase>> GetAllUsersDTOWithPaginationAsync(int pageNumber, int pageSize);
+        Task<List<User>> GetNotApprovedUsersAsync();
         Task<UserDTOBase> CreateUserAsync(User user);
         Task<UserDTOBase> UpdateUserAsync(User user, long id);
         Task<bool> DeleteUserAsync(long id);

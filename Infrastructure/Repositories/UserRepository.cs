@@ -181,6 +181,25 @@ namespace adstaskhub_api.Infrastructure.Repositories
             return null;
         }
 
+        public async Task<List<User>> GetNotApprovedUsersAsync()
+        {
+            List<User> users = await _dbContext.Users
+                .Include(x => x.Role)
+                .Include(x => x.Class)
+                    .ThenInclude(x => x.Period)
+                .Where(user => !user.IsApproved)
+                .ToListAsync();
+
+            List<User> validUsers = users.Where(user => !user.IsDeleted).ToList();
+
+            if (validUsers.Any())
+            {
+                return validUsers;
+            }
+
+            return null;
+        }
+
         public async Task<UserDTOBase> CreateUserAsync(User user)
         {
             await _dbContext.Users.AddAsync(user);
